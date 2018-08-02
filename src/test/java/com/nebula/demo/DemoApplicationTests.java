@@ -20,7 +20,7 @@ public class DemoApplicationTests {
     StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    RedisTemplate redisTemplate;
+    RedisTemplate<Object,Product> prodRedisTemplate;
 
     @Autowired
     ProductRepository repository;
@@ -29,7 +29,7 @@ public class DemoApplicationTests {
     public void test() {
         Iterable<Product> all = repository.findAll();
         all.forEach(product -> {
-            stringRedisTemplate.opsForList().leftPush("product",product.getDescription());
+            prodRedisTemplate.opsForList().leftPush("product",product);
         });
 
 //        stringRedisTemplate.opsForValue().append("k1","{value}");
