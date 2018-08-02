@@ -5,6 +5,7 @@ import com.nebula.demo.entity.Product;
 import com.nebula.demo.entity.Transaction;
 import com.nebula.demo.repository.BlockRepository;
 import com.nebula.demo.repository.ProductRepository;
+import com.nebula.demo.repository.TransactionRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -33,6 +34,9 @@ public class Web3jRunner implements ApplicationRunner {
     @Autowired
     BlockRepository repository;
 
+    @Autowired
+    TransactionRepository transactionRepository;
+
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
         Web3j web3j = Web3j.build(new HttpService("http://testnet.nebula-ai.com:8545"));
@@ -52,9 +56,12 @@ public class Web3jRunner implements ApplicationRunner {
                         BeanUtils.copyProperties(t,transaction);
                         System.out.println(transaction);
                         transactionList.add(transaction);
-                        System.out.println("has ts: "+((EthBlock.TransactionObject)t.get()).get().getHash());
+                        String input = transaction.getInput();
+                        System.out.println("-----------------------------"+input);
+//                        System.out.println("has ts: "+((EthBlock.TransactionObject)t.get()).get().getHash());
                     });
-                    block.setTransactions(transactionList);
+                    List<Transaction> savedTransactions = transactionRepository.save(transactionList);
+                    block.setTransactions(savedTransactions);
                     repository.save(block);
                 });
     }
