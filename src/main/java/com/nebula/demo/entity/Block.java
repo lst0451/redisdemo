@@ -21,7 +21,7 @@ public class Block {
 
     private String parentHash;
 
-    private BigInteger nonce;
+    private String nonce;
 
     private String sha3Uncles;
 
@@ -40,19 +40,19 @@ public class Block {
 
     private String mixHash;
 
-    private BigInteger difficulty;
+    private String difficulty;
 
-    private BigInteger totalDifficulty;
+    private String totalDifficulty;
 
     private String extraData;
 
-    private BigInteger size;
+    private String size;
 
-    private BigInteger gasLimit;
+    private String gasLimit;
 
-    private BigInteger gasUsed;
+    private String gasUsed;
 
-    private BigInteger timestamp;
+    private String timestamp;
 
     @OneToMany(mappedBy = "block",cascade = {CascadeType.ALL})
     @JsonManagedReference
