@@ -1,7 +1,6 @@
 package com.nebula.demo.config;
 
-import com.nebula.demo.entity.Product;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import com.nebula.demo.entity.Block;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -13,13 +12,14 @@ import java.net.UnknownHostException;
 @Configuration
 public class RedisConfig {
 
+
     @Bean
-    public RedisTemplate<Object, Product> prodRedisTemplate(
+    public RedisTemplate<Object, Block> blockRedisTemplate(
             RedisConnectionFactory redisConnectionFactory)
             throws UnknownHostException {
-        RedisTemplate<Object, Product> template = new RedisTemplate<Object, Product>();
+        RedisTemplate<Object, Block> template = new RedisTemplate<Object,Block>();
         template.setConnectionFactory(redisConnectionFactory);
-        Jackson2JsonRedisSerializer<Product> redisSerializer = new Jackson2JsonRedisSerializer<Product>(Product.class);
+        Jackson2JsonRedisSerializer<Block> redisSerializer = new Jackson2JsonRedisSerializer<Block>(Block.class);
         template.setDefaultSerializer(redisSerializer);
         return template;
     }
