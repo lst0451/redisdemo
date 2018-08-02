@@ -1,5 +1,7 @@
 package com.nebula.demo;
 
+import com.nebula.demo.entity.Product;
+import com.nebula.demo.repository.ProductRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,19 @@ public class DemoApplicationTests {
     @Autowired
     RedisTemplate redisTemplate;
 
+    @Autowired
+    ProductRepository repository;
+
     @Test
     public void test() {
-        stringRedisTemplate.opsForValue().append("k1","{value}");
-        String k1 = stringRedisTemplate.opsForValue().get("k1");
-        System.out.println(k1);
+        Iterable<Product> all = repository.findAll();
+        all.forEach(product -> {
+            stringRedisTemplate.opsForList().leftPush("product",product.getDescription());
+        });
+
+//        stringRedisTemplate.opsForValue().append("k1","{value}");
+//        String k1 = stringRedisTemplate.opsForValue().get("k1");
+//        System.out.println(k1);
     }
 
 
