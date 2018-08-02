@@ -3,9 +3,7 @@ package com.nebula.demo.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -24,6 +22,7 @@ public class Block {
 
     private String sha3Uncles;
 
+    @Column(length = 1024)
     private String logsBloom;
 
     private String transactionsRoot;

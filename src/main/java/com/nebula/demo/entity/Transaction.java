@@ -3,10 +3,7 @@ package com.nebula.demo.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.math.BigInteger;
 
 @Entity
@@ -28,8 +25,10 @@ public class Transaction {
 
     private BigInteger transactionIndex;
 
+    @Column(name = "t_from")
     private String from;
 
+    @Column(name = "t_to")
     private String to;
 
     private BigInteger value;
