@@ -51,7 +51,7 @@ public class Block {
 
     private BigInteger timestamp;
 
-    @OneToMany(mappedBy = "block")
+    @OneToMany(mappedBy = "block",cascade = {CascadeType.ALL})
     private List<Transaction> transactions;
 
 //    private List<String> uncles;

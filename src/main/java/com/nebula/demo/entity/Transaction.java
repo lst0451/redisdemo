@@ -10,7 +10,7 @@ import java.math.BigInteger;
 @Data
 public class Transaction {
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "block_number")
     private Block block;
 
