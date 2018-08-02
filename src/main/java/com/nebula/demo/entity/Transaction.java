@@ -1,6 +1,7 @@
 
 package com.nebula.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,18 +13,19 @@ public class Transaction {
 
     @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "block_number")
+    @JsonBackReference
     private Block block;
 
     private String hash;
 
-    private BigInteger nonce;
+    private String nonce;
 
     @Id
     private String blockHash;
 
 //    private BigInteger blockNumber;
 
-    private BigInteger transactionIndex;
+    private String transactionIndex;
 
     @Column(name = "t_from")
     private String from;
@@ -31,11 +33,12 @@ public class Transaction {
     @Column(name = "t_to")
     private String to;
 
-    private BigInteger value;
+    @Column(length = 255)
+    private String value;
 
-    private BigInteger gasPrice;
+    private String gasPrice;
 
-    private BigInteger gas;
+    private String gas;
 
     private String input;
 
@@ -49,7 +52,7 @@ public class Transaction {
 
     private String s;
 
-    private BigInteger v;
+    private String v;
 
     private String nonceRaw;
 
@@ -61,7 +64,7 @@ public class Transaction {
 
     private String gasPriceRaw;
 
-    private BigInteger chainId;
+    private String chainId;
 
     private String gasRaw;
 }

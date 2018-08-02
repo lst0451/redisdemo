@@ -26,12 +26,6 @@ import java.util.List;
 public class Web3jRunner implements ApplicationRunner {
 
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    RedisTemplate<Object,Product> prodRedisTemplate;
-
-    @Autowired
     BlockRepository repository;
 
     @Autowired
@@ -41,7 +35,10 @@ public class Web3jRunner implements ApplicationRunner {
     public void run(ApplicationArguments applicationArguments) throws Exception {
         Web3j web3j = Web3j.build(new HttpService("http://testnet.nebula-ai.com:8545"));
 
-        web3j.catchUpToLatestAndSubscribeToNewBlocksObservable(DefaultBlockParameter.valueOf(BigInteger.valueOf(1175000)),true)
+        BigInteger lastBlockNumber = repository.getLastBlockNumber();
+        lastBlockNumber = lastBlockNumber==null?BigInteger.ONE:lastBlockNumber;
+
+        web3j.catchUpToLatestAndSubscribeToNewBlocksObservable(DefaultBlockParameter.valueOf(lastBlockNumber),true)
                 .subscribe(ethBlock -> {
                     Block block = new Block();
                     List<Transaction> transactionList = new ArrayList<>();
@@ -56,11 +53,9 @@ public class Web3jRunner implements ApplicationRunner {
                         BeanUtils.copyProperties(t,transaction);
                         System.out.println(transaction);
                         transactionList.add(transaction);
-                        String input = transaction.getInput();
-                        System.out.println("-----------------------------"+input);
-//                        System.out.println("has ts: "+((EthBlock.TransactionObject)t.get()).get().getHash());
                     });
                     List<Transaction> savedTransactions = transactionRepository.save(transactionList);
+                    savedTransactions.forEach(t->t.setBlock(block));
                     block.setTransactions(savedTransactions);
                     repository.save(block);
                 });
