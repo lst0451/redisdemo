@@ -2,7 +2,10 @@ package com.nebula.demo.controller;
 
 import com.nebula.demo.entity.Block;
 import com.nebula.demo.repository.BlockRepository;
+import com.nebula.demo.service.BlockChainService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -25,6 +28,21 @@ public class TestController {
     @Autowired
     BlockRepository repository;
 
+    @Autowired
+    BlockChainService blockChainService;
+
+
+
+
+
+    @GetMapping("/latestblock/{count}")
+    public ResponseEntity<?> getLatestBlock(@PathVariable Integer count) {
+        System.out.println("-----------------------------------");
+        Page<Block> latestBlocks = blockChainService.getLatestBlocks(new PageRequest(0, count));
+
+        return ResponseEntity.ok(latestBlocks);
+
+    }
     @GetMapping("/block/{number}")
     public ResponseEntity<?> getOneBlock(@PathVariable Long number) {
         System.out.println("-----------------------------------");
@@ -41,7 +59,6 @@ public class TestController {
         BoundHashOperations ops = blockRedisTemplate.boundHashOps("blocks");
         Block block = (Block) ops.get(number);
         return ResponseEntity.ok(block);
-
 
     }
 

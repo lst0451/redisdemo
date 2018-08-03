@@ -7,12 +7,13 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
 @Entity
 @Data
-public class Block {
+public class Block implements Serializable {
 
     @Id
     private BigInteger number;
