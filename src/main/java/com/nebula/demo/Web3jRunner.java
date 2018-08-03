@@ -40,14 +40,14 @@ public class Web3jRunner implements ApplicationRunner {
                     List<Transaction> transactionList = new ArrayList<>();
                     EthBlock.Block result = ethBlock.getResult();
                     BeanUtils.copyProperties(result,block);
-                    System.out.println(block);
+                  //  System.out.println(block);
                     String hash = result.getHash();
                     List<EthBlock.TransactionResult> transactions = result.getTransactions();
 
                     transactions.forEach(t->{
                         Transaction transaction = new Transaction();
                         BeanUtils.copyProperties(t,transaction);
-                        System.out.println(transaction);
+                       // System.out.println(transaction);
                         transactionList.add(transaction);
                     });
                     List<Transaction> savedTransactions = transactionRepository.save(transactionList);

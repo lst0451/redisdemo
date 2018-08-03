@@ -2,6 +2,8 @@ package com.nebula.demo.repository;
 
 import com.nebula.demo.entity.Block;
 import com.nebula.demo.entity.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,5 +17,8 @@ public interface TransactionRepository extends JpaRepository<Transaction,String>
 
     @Query(value = "select t.block from Transaction t where t.hash = ?1")
     public Block findBlockByTransactionHash(String hash);
+
+    @Query(value = "select t from Transaction t order by t.block desc")
+    public Page<Transaction> getLatestTransaction(Pageable pageable);
 
 }
