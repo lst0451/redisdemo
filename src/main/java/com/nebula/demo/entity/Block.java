@@ -25,7 +25,6 @@ public class Block {
 
     private String sha3Uncles;
 
-    @Column(length = 1024)
     private String logsBloom;
 
     private String transactionsRoot;
@@ -54,7 +53,7 @@ public class Block {
 
     private String timestamp;
 
-    @OneToMany(mappedBy = "block",cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "block",fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
     @JsonManagedReference
     @NotFound(action = NotFoundAction.IGNORE)
     private List<Transaction> transactions;

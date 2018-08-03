@@ -11,7 +11,7 @@ import java.math.BigInteger;
 @Data
 public class Transaction {
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "block_number")
     @JsonBackReference
     private Block block;
