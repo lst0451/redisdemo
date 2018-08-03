@@ -1,6 +1,7 @@
 package com.nebula.demo.repository;
 
 import com.nebula.demo.entity.Block;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +19,8 @@ public interface BlockRepository extends JpaRepository<Block,BigInteger> {
 
     @Query(value = "select b from Block b order by b.number desc")
     public Page<Block> getLatestBlocks(Pageable pageable);
+
+    @Cacheable(cacheNames = "vvv")
+    public Block findBlockByNumber(BigInteger number);
 
 }
