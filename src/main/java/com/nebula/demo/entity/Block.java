@@ -7,12 +7,13 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
 @Entity
 @Data
-public class Block {
+public class Block implements Serializable {
 
     @Id
     private BigInteger number;
@@ -25,7 +26,6 @@ public class Block {
 
     private String sha3Uncles;
 
-    @Column(length = 1024)
     private String logsBloom;
 
     private String transactionsRoot;
@@ -54,7 +54,7 @@ public class Block {
 
     private String timestamp;
 
-    @OneToMany(mappedBy = "block",cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "block",fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
     @JsonManagedReference
     @NotFound(action = NotFoundAction.IGNORE)
     private List<Transaction> transactions;

@@ -1,10 +1,8 @@
 package com.nebula.demo;
 
 import com.nebula.demo.entity.Block;
-import com.nebula.demo.entity.Product;
 import com.nebula.demo.entity.Transaction;
 import com.nebula.demo.repository.BlockRepository;
-import com.nebula.demo.repository.ProductRepository;
 import com.nebula.demo.repository.TransactionRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +17,6 @@ import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.http.HttpService;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,26 +29,13 @@ public class DemoApplicationTests {
     StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    RedisTemplate<Object,Product> prodRedisTemplate;
-
-    @Autowired
-    ProductRepository prorepository;
+    RedisTemplate<Object,Block> blockRedisTemplate;
 
     @Autowired
     BlockRepository repository;
 
     @Autowired
     TransactionRepository transactionRepository;
-
-    @Test
-    public void test() {
-
-        Iterable<Product> all = prorepository.findAll();
-        all.forEach(product -> {
-            prodRedisTemplate.opsForList().leftPush("product",product);
-        });
-
-    }
 
 
     @Test

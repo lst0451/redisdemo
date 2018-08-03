@@ -5,13 +5,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigInteger;
 
 @Entity
 @Data
-public class Transaction {
+public class Transaction implements Serializable {
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "block_number")
     @JsonBackReference
     private Block block;

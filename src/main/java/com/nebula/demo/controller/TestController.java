@@ -1,52 +1,65 @@
 package com.nebula.demo.controller;
 
-import com.nebula.demo.entity.Product;
-import com.nebula.demo.repository.ProductRepository;
+import com.nebula.demo.entity.Block;
+import com.nebula.demo.repository.BlockRepository;
+import com.nebula.demo.service.BlockChainService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.http.HttpService;
 
-import java.util.List;
+import java.math.BigInteger;
 import java.util.concurrent.ExecutionException;
 
 @RestController
 public class TestController {
 
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
+    RedisTemplate blockRedisTemplate;
+    @Autowired
+    BlockRepository repository;
 
     @Autowired
-    RedisTemplate<Object,Product> prodRedisTemplate;
+    BlockChainService blockChainService;
 
 
-    @Autowired
-    ProductRepository repository;
 
-    @GetMapping("/products")
-    public ResponseEntity<?> getData(){
 
-        Iterable<Product> all = repository.findAll();
 
-//        Product range = prodRedisTemplate.opsForList().rightPop("product");
-//        System.out.println(range);
-        return ResponseEntity.ok(all);
+    @GetMapping("/latestblock/{count}")
+    public ResponseEntity<?> getLatestBlock(@PathVariable Integer count) {
+        System.out.println("-----------------------------------");
+        Page<Block> latestBlocks = blockChainService.getLatestBlocks(new PageRequest(0, count));
+
+        return ResponseEntity.ok(latestBlocks);
+
+    }
+    @GetMapping("/block/{number}")
+    public ResponseEntity<?> getOneBlock(@PathVariable Long number) {
+        System.out.println("-----------------------------------");
+        Block block = repository.findOne(BigInteger.valueOf(number));
+        BoundHashOperations ops = blockRedisTemplate.boundHashOps("blocks");
+        ops.put(block.getNumber(),block);
+        return ResponseEntity.ok(block);
+
     }
 
-    @GetMapping(value = "/product/{id}")
-    public ResponseEntity<?> getProdByid(@PathVariable("id") Long id){
+    @GetMapping("/blockredis/{number}")
+    public ResponseEntity<?> getOneBlockFromRedis(@PathVariable Long number) {
+        System.out.println("-----------------------------------");
+        BoundHashOperations ops = blockRedisTemplate.boundHashOps("blocks");
+        Block block = (Block) ops.get(number);
+        return ResponseEntity.ok(block);
 
-        Product byId = repository.findById(Long.valueOf(id));
-
-        return ResponseEntity.ok(byId);
     }
 
 

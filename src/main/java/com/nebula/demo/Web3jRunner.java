@@ -1,17 +1,13 @@
 package com.nebula.demo;
 
 import com.nebula.demo.entity.Block;
-import com.nebula.demo.entity.Product;
 import com.nebula.demo.entity.Transaction;
 import com.nebula.demo.repository.BlockRepository;
-import com.nebula.demo.repository.ProductRepository;
 import com.nebula.demo.repository.TransactionRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
