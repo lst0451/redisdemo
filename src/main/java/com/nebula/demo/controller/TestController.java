@@ -1,6 +1,7 @@
 package com.nebula.demo.controller;
 
 import com.nebula.demo.entity.Block;
+import com.nebula.demo.entity.Transaction;
 import com.nebula.demo.repository.BlockRepository;
 import com.nebula.demo.service.BlockChainService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,8 @@ public class TestController {
     @Autowired
     BlockRepository repository;
 
+
+
     @Autowired
     BlockChainService blockChainService;
 
@@ -44,6 +48,24 @@ public class TestController {
 
     }
     @GetMapping("/block/{number}")
+    public ResponseEntity<?> getBlockByNumber(@PathVariable BigInteger number) {
+        System.out.println("-----------------------------------");
+        Block block = repository.findBlockByNumber(number);
+//        Page<Block> latestBlocks = blockChainService.getLatestBlocks(new PageRequest(0, count));
+        return ResponseEntity.ok(block);
+
+    }
+
+    @GetMapping("/transaction/{hash}")
+    public ResponseEntity<?> getBlockByNumber(@PathVariable String hash) {
+
+        Block block   = blockChainService.getBlockByTransactionHash(hash);
+
+        return ResponseEntity.ok(block);
+
+    }
+
+    @GetMapping("/blockwrite/{number}")
     public ResponseEntity<?> getOneBlock(@PathVariable Long number) {
         System.out.println("-----------------------------------");
         Block block = repository.findOne(BigInteger.valueOf(number));
