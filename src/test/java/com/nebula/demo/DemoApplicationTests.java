@@ -52,19 +52,22 @@ public class DemoApplicationTests {
                     List<Transaction> transactionList = new ArrayList<>();
                     EthBlock.Block result = ethBlock.getResult();
                     BeanUtils.copyProperties(result,block);
+                    System.out.println(result);
                     System.out.println(block);
                     String hash = result.getHash();
-                    List<EthBlock.TransactionResult> transactions = result.getTransactions();
+//                    List<EthBlock.TransactionResult> transactions = result.getTransactions();
 
-                    transactions.forEach(t->{
+                    /*  transactions.forEach(t->{
                         Transaction transaction = new Transaction();
                         BeanUtils.copyProperties(t,transaction);
                         System.out.println(transaction);
                         transactionList.add(transaction);
                     });
-                    List<Transaction> savedTransactions = transactionRepository.save(transactionList);
-                    savedTransactions.forEach(t->t.setBlock(block));
-                    block.setTransactions(savedTransactions);
+                    */
+
+//                    List<Transaction> savedTransactions = transactionRepository.save(transactionList);
+//                    savedTransactions.forEach(t->t.setBlock(block));
+//                    block.setTransactions(savedTransactions);
                     repository.save(block);
                 });
     }
