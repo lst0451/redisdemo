@@ -1,14 +1,15 @@
 package com.nebula.demo;
 
-import com.nebula.demo.entity.Block;
-import com.nebula.demo.entity.Transaction;
 import com.nebula.demo.entity.WBlock;
 import com.nebula.demo.entity.WTransaction;
 import com.nebula.demo.repository.BlockRepository;
 import com.nebula.demo.repository.WBlockRepository;
 import com.nebula.demo.repository.WTransactionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,8 @@ import java.util.List;
 @Component
 public class Web3jRunner implements ApplicationRunner {
 
+    Logger logger = LoggerFactory.getLogger(Web3jRunner.class);
+
     @Autowired
     BlockRepository br;
 
@@ -33,9 +36,13 @@ public class Web3jRunner implements ApplicationRunner {
     @Autowired
     WTransactionRepository transactionRepository;
 
+    @Value("${blockchain.url}")
+    String blockchainURL;
+
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        Web3j web3j = Web3j.build(new HttpService("http://testnet.nebula-ai.com:8545"));
+
+        Web3j web3j = Web3j.build(new HttpService(blockchainURL));
 
         BigInteger lastBlockNumber = br.getLastBlockNumber();
         lastBlockNumber = lastBlockNumber==null?BigInteger.ONE:lastBlockNumber;
@@ -53,10 +60,11 @@ public class Web3jRunner implements ApplicationRunner {
                     try {
                         wBlock = wBlockRepository.save(wBlock);
                     } catch (Exception e) {
+                        logger.error("save block 1 error,block number: "+ wBlock.getNumber());
                         e.printStackTrace();
                     }
 
-                    System.out.println(wBlock);
+//                    System.out.println(wBlock);
 
                     List<EthBlock.TransactionResult> transactions = result.getTransactions();
 
@@ -64,16 +72,17 @@ public class Web3jRunner implements ApplicationRunner {
                         WTransaction wTransaction = new WTransaction();
                         BeanUtils.copyProperties(t, wTransaction);
                         wTransaction.setBlock(wBlock);
-//                        System.out.println(transaction);
                         transactionList.add(wTransaction);
                     }
                     List<WTransaction> savedTransactions = null;
                     try {
                         savedTransactions = transactionRepository.save(transactionList);
                     } catch (Exception e) {
+                        logger.error("----------- save transaction error: ");
+                        transactionList.forEach(t-> logger.error(t.getHash()));
+                        logger.error("-----------");
                         e.printStackTrace();
                     }
-//                    savedTransactions.forEach(t->t.setBlock(block));
                     wBlock.setTransactions(savedTransactions);
 
 
@@ -81,9 +90,9 @@ public class Web3jRunner implements ApplicationRunner {
                     try {
                         savedBlock = wBlockRepository.save(wBlock);
                     } catch (Exception e) {
+                        logger.error("save block 2 error,block number: "+ wBlock.getNumber());
                         e.printStackTrace();
                     }
-//                    System.out.println("saved block: "+ block1);
                 });
     }
 }
