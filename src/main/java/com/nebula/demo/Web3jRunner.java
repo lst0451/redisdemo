@@ -49,6 +49,7 @@ public class Web3jRunner implements ApplicationRunner {
 
         web3j.catchUpToLatestAndSubscribeToNewBlocksObservable(DefaultBlockParameter.valueOf(lastBlockNumber),true)
                 .subscribe(ethBlock -> {
+
                     WBlock wBlock = new WBlock();
                     List<WTransaction> transactionList = new ArrayList<>();
                     EthBlock.Block result = ethBlock.getResult();
@@ -68,23 +69,28 @@ public class Web3jRunner implements ApplicationRunner {
 
                     List<EthBlock.TransactionResult> transactions = result.getTransactions();
 
+
                     for (EthBlock.TransactionResult t : transactions) {
                         WTransaction wTransaction = new WTransaction();
                         BeanUtils.copyProperties(t, wTransaction);
                         wTransaction.setBlock(wBlock);
                         transactionList.add(wTransaction);
                     }
-                    List<WTransaction> savedTransactions = null;
-                    try {
-                        savedTransactions = transactionRepository.save(transactionList);
-                    } catch (Exception e) {
-                        logger.error("----------- save transaction error: ");
-                        transactionList.forEach(t-> logger.error(t.getHash()));
-                        logger.error("-----------");
-                        e.printStackTrace();
-                    }
-                    wBlock.setTransactions(savedTransactions);
 
+                    List<WTransaction> savedTransactions = null;
+
+                    if (transactionList.size()>0) {
+                        try {
+                            savedTransactions = transactionRepository.save(transactionList);
+                        } catch (Exception e) {
+                            logger.error("----------- save transaction error: ");
+                            transactionList.forEach(t-> logger.error(t.getHash()));
+                            logger.error("-----------");
+                            e.printStackTrace();
+                        }
+                    }
+
+                    wBlock.setTransactions(savedTransactions);
 
                     WBlock savedBlock = null;
                     try {
@@ -93,6 +99,8 @@ public class Web3jRunner implements ApplicationRunner {
                         logger.error("save block 2 error,block number: "+ wBlock.getNumber());
                         e.printStackTrace();
                     }
-                });
+                }
+
+                );
     }
 }
