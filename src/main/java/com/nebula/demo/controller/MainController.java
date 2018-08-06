@@ -75,6 +75,7 @@ public class MainController {
     public ResponseEntity<?> getLatestTrasaction(@PathVariable Integer count) {
         System.out.println("-----------------------------------");
         Page<Transaction> latestBlocks = transactionRepository.getLatestTransaction(new PageRequest(0, count));
+        latestBlocks.forEach(transaction -> transaction.setBlock_number(transaction.getBlock().getNumber()));
         return ResponseEntity.ok(latestBlocks);
     }
 

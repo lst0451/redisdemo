@@ -29,7 +29,7 @@ public class DemoApplicationTests {
     StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    RedisTemplate<Object,Block> blockRedisTemplate;
+    RedisTemplate<Object, Block> blockRedisTemplate;
 
     @Autowired
     BlockRepository repository;
@@ -41,41 +41,42 @@ public class DemoApplicationTests {
     @Test
     public void getBlock() {
 
-        Web3j web3j = Web3j.build(new HttpService("http://testnet.nebula-ai.com:8545"));
+//        Web3j web3j = Web3j.build(new HttpService("http://testnet.nebula-ai.com:8545"));
+//
+//        BigInteger lastBlockNumber = repository.getLastBlockNumber();
+//        lastBlockNumber = lastBlockNumber==null?BigInteger.ONE:lastBlockNumber;
+//
+//        web3j.catchUpToLatestAndSubscribeToNewBlocksObservable(DefaultBlockParameter.valueOf(lastBlockNumber),true)
+//                .subscribe(ethBlock -> {
+//                    Block block = new Block();
+//                    List<Transaction> transactionList = new ArrayList<>();
+//                    EthBlock.Block result = ethBlock.getResult();
+//                    BeanUtils.copyProperties(result,block);
+//                    System.out.println(result);
+//                    System.out.println(block);
+//                    String hash = result.getHash();
+////                    List<EthBlock.TransactionResult> transactions = result.getTransactions();
+//
+//                    /*  transactions.forEach(t->{
+//                        Transaction transaction = new Transaction();
+//                        BeanUtils.copyProperties(t,transaction);
+//                        System.out.println(transaction);
+//                        transactionList.add(transaction);
+//                    });
+//                    */
+//
+////                    List<Transaction> savedTransactions = transactionRepository.save(transactionList);
+////                    savedTransactions.forEach(t->t.setBlock(block));
+////                    block.setTransactions(savedTransactions);
+//                    repository.save(block);
+//                });
+//    }
 
-        BigInteger lastBlockNumber = repository.getLastBlockNumber();
-        lastBlockNumber = lastBlockNumber==null?BigInteger.ONE:lastBlockNumber;
 
-        web3j.catchUpToLatestAndSubscribeToNewBlocksObservable(DefaultBlockParameter.valueOf(lastBlockNumber),true)
-                .subscribe(ethBlock -> {
-                    Block block = new Block();
-                    List<Transaction> transactionList = new ArrayList<>();
-                    EthBlock.Block result = ethBlock.getResult();
-                    BeanUtils.copyProperties(result,block);
-                    System.out.println(result);
-                    System.out.println(block);
-                    String hash = result.getHash();
-//                    List<EthBlock.TransactionResult> transactions = result.getTransactions();
+//    @Test
+//    public void contextLoads() {
+//
+//    }
 
-                    /*  transactions.forEach(t->{
-                        Transaction transaction = new Transaction();
-                        BeanUtils.copyProperties(t,transaction);
-                        System.out.println(transaction);
-                        transactionList.add(transaction);
-                    });
-                    */
-
-//                    List<Transaction> savedTransactions = transactionRepository.save(transactionList);
-//                    savedTransactions.forEach(t->t.setBlock(block));
-//                    block.setTransactions(savedTransactions);
-                    repository.save(block);
-                });
     }
-
-
-    @Test
-    public void contextLoads() {
-
-    }
-
 }

@@ -68,4 +68,7 @@ public class Transaction implements Serializable {
     @Column(name = "t_to")
     private String to;
 
+    @Transient
+    private BigInteger block_number;
+
 }
